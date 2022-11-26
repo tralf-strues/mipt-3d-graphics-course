@@ -1,0 +1,13 @@
+# macOS files
+*.DS_Store
+
+# build directory
+task1/build
+
+# Visual Studio Code directory
+.vscode/
+
+# binary
+task1/task1
+
+log/
