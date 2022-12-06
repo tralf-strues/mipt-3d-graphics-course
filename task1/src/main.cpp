@@ -59,14 +59,12 @@ int main()
 {
     init();
 
-    g_Camera.aspect_ratio = 1280 / 720;
+    g_Camera.aspect_ratio = 1280.0f / 720.0f;
     g_Camera.position = {5, 0, 0};
     g_Camera.rotation = {0, 0, 0};
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
-
-    glDisable(GL_CULL_FACE);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -75,6 +73,7 @@ int main()
     // uint32_t second_shader = CreateShader("assets/vertex_shader.vert", "assets/fragment_shader.frag");
 
     uint32_t shader = CreateShader("assets/vertex_shader.vert", "assets/fragment_shader.frag");
+    uint32_t sphere_shader = CreateShader("assets/sphere.vert", "assets/sphere.frag");
 
     Mesh first_triangle{};
     first_triangle.rotation = {glm::radians(135.0f), 0, 0};
@@ -83,6 +82,15 @@ int main()
     Mesh second_triangle{};
     second_triangle.rotation = {glm::radians(45.0f), 0, 0};
     second_triangle.Load(SECOND_TRIANGLE_VERTICES, 3, TRIANGLE_INDICES, 3);
+
+    Mesh torus       = CreateTorusMesh(2, 0.5, 256, 1024);
+    torus.position.x = -5;
+    torus.rotation   = {glm::radians(45.0f), 0, 0};
+    torus.scale      = 1;
+
+    Mesh octahedron       = CreateOctahedronMesh(4);
+    octahedron.position.x = -5;
+    octahedron.scale      = 1;
 
     /* Color attachment */
     // uint32_t color_attachment = 0;
@@ -123,12 +131,13 @@ int main()
         auto end_time = std::chrono::steady_clock::now();
         float time = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time).count() / 1e6;
         constexpr float ROTATION_SPEED = 0.6f;
+        constexpr float ZOOM_SPEED     = 0.75f;
 
         glClearColor(0, 0, 0, 0.5);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        g_Camera.position.x = 5 * cosf(ROTATION_SPEED * time);
-        g_Camera.position.z = -5 * sinf(ROTATION_SPEED * time);
+        g_Camera.position.x = (1 + 0.3 * sinf(ZOOM_SPEED * time)) * 12.5 * cosf(ROTATION_SPEED * time);
+        g_Camera.position.z = -(1 + 0.3 * sinf(ZOOM_SPEED * time)) * 12.5 * sinf(ROTATION_SPEED * time);
         g_Camera.rotation.y = glm::radians(90.0f) + ROTATION_SPEED * time;
 
         glm::mat4 view_matrix = g_Camera.CalculateViewMatrix();
@@ -148,6 +157,22 @@ int main()
         second_triangle.LoadModelUniform(shader);
         glDrawElements(GL_TRIANGLES, second_triangle.index_count, GL_UNSIGNED_INT, nullptr);
         second_triangle.Unbind();
+
+        torus.Bind();
+        torus.LoadModelUniform(shader);
+        glDrawElements(GL_TRIANGLES, torus.index_count, GL_UNSIGNED_INT, nullptr);
+        torus.Unbind();
+
+        glUseProgram(sphere_shader);
+
+        glUniformMatrix4fv(glGetUniformLocation(sphere_shader, "view"), 1, false, glm::value_ptr(view_matrix));
+        glUniformMatrix4fv(glGetUniformLocation(sphere_shader, "proj"), 1, false, glm::value_ptr(proj_matrix));
+        glUniform1f(glGetUniformLocation(sphere_shader, "time"), time);
+
+        octahedron.Bind();
+        octahedron.LoadModelUniform(sphere_shader);
+        glDrawElements(GL_TRIANGLES, octahedron.index_count, GL_UNSIGNED_INT, nullptr);
+        octahedron.Unbind();
 
         
         // glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);

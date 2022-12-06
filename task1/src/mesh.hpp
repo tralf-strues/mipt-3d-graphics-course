@@ -17,7 +17,7 @@ struct Mesh
 
     glm::vec3 position{0, 0, 0};
     glm::vec3 rotation{0, 0, 0};
-
+    float     scale{1};
 
     void Load(const Vertex* vertices, uint32_t vertex_count, const uint32_t* indices, uint32_t index_count);
     void Delete();
@@ -27,3 +27,6 @@ struct Mesh
     
     void LoadModelUniform(uint32_t shader_id);
 };
+
+Mesh CreateTorusMesh(float main_radius, float slice_radius, uint32_t outer_samples, uint32_t inner_samples);
+Mesh CreateOctahedronMesh(uint32_t subdivision);
