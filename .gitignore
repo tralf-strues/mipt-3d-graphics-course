@@ -3,6 +3,7 @@
 
 # build directory
 task1/build
+task2/build
 
 # Visual Studio Code directory
 .vscode/
