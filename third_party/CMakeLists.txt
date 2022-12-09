@@ -1,3 +1,6 @@
+set(ASSIMP_BUILD_TESTS OFF)
+add_subdirectory(assimp)
 add_subdirectory(glad)
 add_subdirectory(glfw)
 add_subdirectory(glm)
+add_subdirectory(stb_image)

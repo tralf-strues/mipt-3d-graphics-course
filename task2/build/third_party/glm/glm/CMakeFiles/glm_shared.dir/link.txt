@@ -1,0 +1,1 @@
+/Library/Developer/CommandLineTools/usr/bin/c++ -DGLFW_INCLUDE_NONE -g -O0 -fsanitize=address -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk -dynamiclib -Wl,-headerpad_max_install_names -o libglm_sharedd.dylib -install_name @rpath/libglm_sharedd.dylib CMakeFiles/glm_shared.dir/detail/glm.cpp.o 

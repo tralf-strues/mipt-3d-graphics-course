@@ -1,0 +1,26 @@
+target_sources(task2
+  PUBLIC
+    camera.hpp
+    enemy.hpp
+    game_object.hpp
+    input.hpp
+    material.hpp
+    mesh_object.hpp
+    mesh.hpp
+    player.hpp
+    random.hpp
+    shader.hpp
+    texture.hpp
+
+  PRIVATE
+    camera.cpp
+    enemy.cpp
+    input.cpp
+    main.cpp
+    material.cpp
+    mesh.cpp
+    player.cpp
+    random.cpp
+    shader.cpp
+    texture.cpp
+  )
